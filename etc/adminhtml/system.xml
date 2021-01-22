@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (c) 2020 Zengliwei
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+  ~ documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+  ~ rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+  ~ permit persons to whom the Software is furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+  ~ Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+  ~ WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFINGEMENT. IN NO EVENT SHALL THE AUTHORS
+  ~ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+  ~ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="system">
+            <group id="smtp">
+                <label>Mail Sending Settings</label>
+                <field id="transport_method" translate="label" type="select" sortOrder="15"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Email Transport Method</label>
+                    <source_model>Common\Email\Model\Config\Source\TransportMethods</source_model>
+                </field>
+                <field id="host" canRestore="0">
+                    <comment>For all server platform.</comment>
+                    <depends>
+                        <field id="transport_method">smtp</field>
+                    </depends>
+                </field>
+                <field id="port" canRestore="0">
+                    <depends>
+                        <field id="transport_method">smtp</field>
+                    </depends>
+                </field>
+                <field id="smtp_user" translate="label" type="text" sortOrder="35"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMTP User</label>
+                    <depends>
+                        <field id="transport_method">smtp</field>
+                    </depends>
+                </field>
+                <field id="smtp_password" translate="label" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>SMTP Password</label>
+                    <depends>
+                        <field id="transport_method">smtp</field>
+                    </depends>
+                </field>
+                <field id="debug" translate="label" type="select" sortOrder="999"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Debug Mode</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

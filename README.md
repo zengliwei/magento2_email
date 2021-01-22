@@ -1,2 +1,2 @@
-# magento2_email
-Email module for Magento 2
+# magento2_smtp
+SMTP module of Magento 2
