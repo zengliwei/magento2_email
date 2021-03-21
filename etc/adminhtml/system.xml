@@ -44,7 +44,7 @@
                         <field id="transport_method">smtp</field>
                     </depends>
                 </field>
-                <field id="smtp_password" translate="label" type="text" sortOrder="40"
+                <field id="smtp_password" translate="label" type="password" sortOrder="40"
                        showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>SMTP Password</label>
                     <depends>
