@@ -1,0 +1,22 @@
+<?php
+/**
+ * Copyright (c) Zengliwei. All rights reserved.
+ * Each source file in this distribution is licensed under OSL 3.0, see LICENSE for details.
+ */
+
+use CrazyCat\Email\Block\Adminhtml\System\Config\TestConnection;
+
+/** @var $block TestConnection */
+?>
+<div data-mage-init='{"CrazyCat_Email/js/test-email": {
+        "url": "<?= $block->escapeUrl($block->getDataByKey('ajax_url')) ?>"
+    }}'>
+    <div style="margin-bottom:8px;">
+        <input type="text" class="input-text admin__control-text"
+               id="<?= $block->escapeHtmlAttr($block->getDataByKey('html_id')) ?>"/>
+    </div>
+    <div>
+        <button style="margin-right:8px;" type="button" class="scalable"><span><?= __('Test Email') ?></span></button>
+        <span class="note"><?= $block->escapeHtml(__('You need to test after saving the config.')) ?></span>
+    </div>
+</div>

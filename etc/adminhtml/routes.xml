@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright (c) Zengliwei. All rights reserved.
+  ~ Each source file in this distribution is licensed under OSL 3.0, see LICENSE for details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
+    <router id="admin">
+        <route id="email" frontName="email">
+            <module name="CrazyCat_Email" before="Magento_Backend"/>
+        </route>
+    </router>
+</config>
