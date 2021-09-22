@@ -9,7 +9,9 @@ use CrazyCat\Email\Block\Adminhtml\System\Config\TestConnection;
 /** @var $block TestConnection */
 ?>
 <div data-mage-init='{"CrazyCat_Email/js/test-email": {
-        "url": "<?= $block->escapeUrl($block->getDataByKey('ajax_url')) ?>"
+        "url": "<?= $block->escapeUrl($block->getDataByKey('ajax_url')) ?>",
+        "button_label": "<?= $block->escapeJs(__('Test Email')) ?>",
+        "sending_label": "<?= $block->escapeJs(__('Sending...')) ?>"
     }}'>
     <div style="margin-bottom:8px;">
         <input type="text" class="input-text admin__control-text"

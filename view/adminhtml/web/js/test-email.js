@@ -12,14 +12,18 @@ define([
 
     $.widget('mage.testEmailConnection', {
         options: {
-            url: null
+            url: null,
+            button_label: '',
+            sending_label: ''
         },
         _create: function () {
             const self = this;
             const $email = self.element.find('input');
-            self.element.find('button').on('click', function () {
+            const $button = self.element.find('button');
+            $button.on('click', function () {
                 $email.addClass('required-entry validate-email');
                 if ($.validator.validateSingleElement($email)) {
+                    $button.attr('disabled', 'disabled').find('span').text(self.options.sending_label);
                     $.ajax({
                         url: self.options.url,
                         dataType: 'JSON',
@@ -30,6 +34,9 @@ define([
                             } else {
                                 alert({content: 'Email sent successfully.'});
                             }
+                        },
+                        complete: function () {
+                            $button.removeAttr('disabled').find('span').text(self.options.button_label);
                         }
                     });
                 }
