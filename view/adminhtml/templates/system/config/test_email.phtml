@@ -18,7 +18,9 @@ use CrazyCat\Email\Block\Adminhtml\System\Config\TestConnection;
                id="<?= $block->escapeHtmlAttr($block->getDataByKey('html_id')) ?>"/>
     </div>
     <div>
-        <button style="margin-right:8px;" type="button" class="scalable"><span><?= __('Test Email') ?></span></button>
+        <button style="margin-right:8px;" type="button" class="scalable">
+            <span><?= $block->escapeHtml(__('Test Email')) ?></span>
+        </button>
         <span class="note"><?= $block->escapeHtml(__('You need to test after saving the config.')) ?></span>
     </div>
 </div>
