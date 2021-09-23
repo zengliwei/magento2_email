@@ -12,6 +12,7 @@
                 <debug>0</debug>
                 <auth_method>login</auth_method>
                 <auth_protocol>tls</auth_protocol>
+                <from_smtp_user>1</from_smtp_user>
             </smtp>
         </system>
     </default>
