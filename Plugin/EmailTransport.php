@@ -10,6 +10,7 @@ use Closure;
 use CrazyCat\Base\Helper\Logger;
 use CrazyCat\Email\Helper\Registry;
 use CrazyCat\Email\Model\Transport\Method;
+use Exception;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Mail\TransportInterface;
 use Magento\Store\Model\ScopeInterface;
@@ -94,31 +95,42 @@ class EmailTransport
                 if ($this->scopeConfig->isSetFlag('system/smtp/from_smtp_user', ScopeInterface::SCOPE_STORE, $store)) {
                     $message->setFrom($user);
                 }
+
+                try {
+                    $result = $this->smtp->sendMessage(
+                        $message,
+                        $host,
+                        $port,
+                        $user,
+                        $password,
+                        $authMethod,
+                        $authProtocol
+                    );
+                    $error = null;
+                } catch (Exception $e) {
+                    $error = $e->getMessage();
+                }
+
                 if ($this->scopeConfig->isSetFlag('system/smtp/debug', ScopeInterface::SCOPE_STORE, $store)) {
                     $this->logger->log(
                         sprintf(
                             "SMTP mail sent\n" .
-                            "host: %s\nport: %s\nauth method: %s\nauth protocol: %s\nuser: %s\npassword: %s",
+                            "host: %s\nport: %s\nauth method: %s\nauth protocol: %s\nuser: %s\npassword: %s\n" .
+                            "subject: %s\nerror: %s",
                             $host,
                             $port,
                             $authMethod,
                             $authProtocol,
                             $user,
-                            $password
+                            $password,
+                            $message->getSubject(),
+                            $error
                         ),
                         'email/' . date('Y') . '/' . date('m') . '/' . date('Y-m-d') . '.log'
                     );
                 }
 
-                return $this->smtp->sendMessage(
-                    $message,
-                    $host,
-                    $port,
-                    $user,
-                    $password,
-                    $authMethod,
-                    $authProtocol
-                );
+                return $result;
 
             default:
                 return $proceed();

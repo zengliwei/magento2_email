@@ -39,7 +39,7 @@ class Smtp
         $authMethod = 'login',
         $authProtocol = 'tls'
     ) {
-        (new \Zend\Mail\Transport\Smtp(
+        return (new \Zend\Mail\Transport\Smtp(
             new SmtpOptions(
                 [
                     'host'              => $host,
