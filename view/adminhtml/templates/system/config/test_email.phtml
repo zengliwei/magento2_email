@@ -13,14 +13,12 @@ use CrazyCat\Email\Block\Adminhtml\System\Config\TestConnection;
         "button_label": "<?= $block->escapeJs(__('Test Email')) ?>",
         "sending_label": "<?= $block->escapeJs(__('Sending...')) ?>"
     }}'>
-    <div style="margin-bottom:8px;">
-        <input type="text" class="input-text admin__control-text"
-               id="<?= $block->escapeHtmlAttr($block->getDataByKey('html_id')) ?>"/>
-    </div>
-    <div>
+    <input type="text" class="input-text admin__control-text"
+           id="<?= $block->escapeHtmlAttr($block->getDataByKey('html_id')) ?>"/>
+    <p class="note"><?= $block->escapeHtml(__('You can try to send an email without saving config here.')) ?></p>
+    <div style="margin-top:8px;">
         <button style="margin-right:8px;" type="button" class="scalable">
             <span><?= $block->escapeHtml(__('Test Email')) ?></span>
         </button>
-        <span class="note"><?= $block->escapeHtml(__('You need to test after saving the config.')) ?></span>
     </div>
 </div>

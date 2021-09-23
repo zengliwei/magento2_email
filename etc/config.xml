@@ -10,6 +10,8 @@
             <smtp>
                 <transport_method>default</transport_method>
                 <debug>0</debug>
+                <auth_method>login</auth_method>
+                <auth_protocol>tls</auth_protocol>
             </smtp>
         </system>
     </default>

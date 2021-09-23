@@ -10,44 +10,64 @@
             <group id="smtp">
                 <label>Mail Sending Settings</label>
                 <field id="transport_method" translate="label" type="select" sortOrder="15"
-                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                       showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Email Transport Method</label>
                     <source_model>CrazyCat\Email\Model\Config\Source\TransportMethods</source_model>
                 </field>
-                <field id="host" canRestore="0">
+                <field id="host" showInDefault="1" showInWebsite="0" showInStore="0">
                     <comment>For all server platform.</comment>
+                    <validate>required-entry</validate>
                     <depends>
                         <field id="transport_method">smtp</field>
                     </depends>
                 </field>
-                <field id="port" canRestore="0">
+                <field id="port" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <validate>required-entry</validate>
                     <depends>
                         <field id="transport_method">smtp</field>
                     </depends>
                 </field>
-                <field id="smtp_user" translate="label" type="text" sortOrder="35"
-                       showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="auth_method" translate="label" type="select" sortOrder="35"
+                       showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Auth Method</label>
+                    <source_model>CrazyCat\Email\Model\Config\Source\AuthMethods</source_model>
+                    <depends>
+                        <field id="transport_method">smtp</field>
+                    </depends>
+                </field>
+                <field id="auth_protocol" translate="label" type="select" sortOrder="36"
+                       showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Auth Protocol</label>
+                    <source_model>CrazyCat\Email\Model\Config\Source\AuthProtocols</source_model>
+                    <depends>
+                        <field id="transport_method">smtp</field>
+                    </depends>
+                </field>
+                <field id="smtp_user" translate="label" type="text" sortOrder="37"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>SMTP User</label>
+                    <validate>required-entry</validate>
                     <depends>
                         <field id="transport_method">smtp</field>
                     </depends>
                 </field>
-                <field id="smtp_password" translate="label" type="password" sortOrder="40"
-                       showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="smtp_password" translate="label" type="password" sortOrder="38"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>SMTP Password</label>
+                    <validate>required-entry</validate>
                     <depends>
                         <field id="transport_method">smtp</field>
                     </depends>
                 </field>
-                <field id="test_connect" translate="button_label" sortOrder="45"
-                       showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="test_connect" translate="button_label" sortOrder="39"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
                     <frontend_model>CrazyCat\Email\Block\Adminhtml\System\Config\TestEmail</frontend_model>
                     <depends>
                         <field id="transport_method">smtp</field>
                     </depends>
                 </field>
                 <field id="debug" translate="label" type="select" sortOrder="999"
-                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                       showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
                     <label>Debug Mode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>

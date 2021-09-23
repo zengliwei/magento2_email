@@ -9,9 +9,7 @@ namespace CrazyCat\Email\Plugin;
 use Closure;
 use CrazyCat\Email\Model\Transport\Method;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\Exception\MailException;
 use Magento\Framework\Mail\TransportInterface;
-use Magento\Store\Model\ScopeInterface;
 
 /**
  * @author  Zengliwei <zengliwei@163.com>
@@ -47,14 +45,20 @@ class EmailTransport
      * @param TransportInterface $subject
      * @param Closure            $proceed
      * @return mixed
-     * @throws MailException
      */
     public function aroundSendMessage(TransportInterface $subject, Closure $proceed)
     {
-        $store = null;
-        switch ($this->scopeConfig->getValue('system/smtp/transport_method', ScopeInterface::SCOPE_STORE, $store)) {
+        switch ($this->scopeConfig->getValue('system/smtp/transport_method')) {
             case Method\Smtp::METHOD:
-                return $this->smtp->sendMessage($subject->getMessage(), $store);
+                return $this->smtp->sendMessage(
+                    $subject->getMessage(),
+                    $this->scopeConfig->getValue('system/smtp/host'),
+                    $this->scopeConfig->getValue('system/smtp/port'),
+                    $this->scopeConfig->getValue('system/smtp/smtp_user'),
+                    $this->scopeConfig->getValue('system/smtp/smtp_password'),
+                    $this->scopeConfig->getValue('system/smtp/auth_method'),
+                    $this->scopeConfig->getValue('system/smtp/auth_protocol')
+                );
 
             default:
                 return $proceed();

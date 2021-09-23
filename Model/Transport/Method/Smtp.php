@@ -6,8 +6,7 @@
 
 namespace CrazyCat\Email\Model\Transport\Method;
 
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\Mail\EmailMessageInterface;
 use Zend\Mail\Message;
 use Zend\Mail\Transport\SmtpOptions;
 
@@ -15,44 +14,41 @@ use Zend\Mail\Transport\SmtpOptions;
  * @author  Zengliwei <zengliwei@163.com>
  * @url https://github.com/zengliwei/magento2_email
  */
-class Smtp implements MethodInterface
+class Smtp
 {
     public const METHOD = 'smtp';
+    public const METHOD_NAME = 'SMTP';
 
     /**
-     * @var ScopeConfigInterface
+     * Send message
+     *
+     * @param EmailMessageInterface $message
+     * @param string                $host
+     * @param string                $port
+     * @param string                $username
+     * @param string                $password
+     * @param string                $authMethod
+     * @param string                $authProtocol
      */
-    private $scopeConfig;
-
-    /**
-     * @param ScopeConfigInterface $scopeConfig
-     */
-    public function __construct(
-        ScopeConfigInterface $scopeConfig
+    public function sendMessage(
+        $message,
+        $host,
+        $port,
+        $username,
+        $password,
+        $authMethod = 'login',
+        $authProtocol = 'tls'
     ) {
-        $this->scopeConfig = $scopeConfig;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function sendMessage($message, $store)
-    {
-        $host = $this->scopeConfig->getValue('system/smtp/host', ScopeInterface::SCOPE_STORE, $store);
-        $port = $this->scopeConfig->getValue('system/smtp/port', ScopeInterface::SCOPE_STORE, $store);
-        $username = $this->scopeConfig->getValue('system/smtp/smtp_user', ScopeInterface::SCOPE_STORE, $store);
-        $password = $this->scopeConfig->getValue('system/smtp/smtp_password', ScopeInterface::SCOPE_STORE, $store);
-
         (new \Zend\Mail\Transport\Smtp(
             new SmtpOptions(
                 [
                     'host'              => $host,
                     'port'              => $port,
-                    'connection_class'  => 'login',
+                    'connection_class'  => $authMethod,
                     'connection_config' => [
                         'username' => $username,
                         'password' => $password,
-                        'ssl'      => 'tls'
+                        'ssl'      => $authProtocol
                     ]
                 ]
             )
