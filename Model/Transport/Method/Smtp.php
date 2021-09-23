@@ -6,9 +6,10 @@
 
 namespace CrazyCat\Email\Model\Transport\Method;
 
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\Smtp as Transport;
+use Laminas\Mail\Transport\SmtpOptions;
 use Magento\Framework\Mail\EmailMessageInterface;
-use Zend\Mail\Message;
-use Zend\Mail\Transport\SmtpOptions;
 
 /**
  * @author  Zengliwei <zengliwei@163.com>
@@ -39,7 +40,7 @@ class Smtp
         $authMethod = 'login',
         $authProtocol = 'tls'
     ) {
-        return (new \Zend\Mail\Transport\Smtp(
+        return (new Transport(
             new SmtpOptions(
                 [
                     'host'              => $host,

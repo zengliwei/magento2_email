@@ -60,80 +60,62 @@ class EmailTransport
     }
 
     /**
+     * Get config
+     *
+     * @param string $path
+     */
+    private function getConfig($path)
+    {
+        return $this->scopeConfig->getValue(
+            $path,
+            ScopeInterface::SCOPE_STORE,
+            $this->registry->registry('template_option_store')
+        );
+    }
+
+    /**
      * Around sendMessage
      *
      * @param TransportInterface $subject
      * @param Closure            $proceed
-     * @return mixed
+     * @return void
      */
     public function aroundSendMessage(TransportInterface $subject, Closure $proceed)
     {
-        switch ($this->scopeConfig->getValue('system/smtp/transport_method')) {
+        switch ($this->getConfig('system/smtp/transport_method')) {
             case Method\Smtp::METHOD:
-                $store = $this->registry->registry('template_option_store');
+                $host = $this->getConfig('system/smtp/host');
+                $port = $this->getConfig('system/smtp/port');
+                $user = $this->getConfig('system/smtp/smtp_user');
+                $password = $this->getConfig('system/smtp/smtp_password');
+                $authMethod = $this->getConfig('system/smtp/auth_method');
+                $authProtocol = $this->getConfig('system/smtp/auth_protocol');
+
                 $message = $subject->getMessage();
-
-                $host = $this->scopeConfig->getValue('system/smtp/host', ScopeInterface::SCOPE_STORE, $store);
-                $port = $this->scopeConfig->getValue('system/smtp/port', ScopeInterface::SCOPE_STORE, $store);
-                $user = $this->scopeConfig->getValue('system/smtp/smtp_user', ScopeInterface::SCOPE_STORE, $store);
-                $password = $this->scopeConfig->getValue(
-                    'system/smtp/smtp_password',
-                    ScopeInterface::SCOPE_STORE,
-                    $store
-                );
-                $authMethod = $this->scopeConfig->getValue(
-                    'system/smtp/auth_method',
-                    ScopeInterface::SCOPE_STORE,
-                    $store
-                );
-                $authProtocol = $this->scopeConfig->getValue(
-                    'system/smtp/auth_protocol',
-                    ScopeInterface::SCOPE_STORE,
-                    $store
-                );
-
-                if ($this->scopeConfig->isSetFlag('system/smtp/from_smtp_user', ScopeInterface::SCOPE_STORE, $store)) {
+                if ($this->getConfig('system/smtp/from_smtp_user')) {
                     $message->setFrom($user);
                 }
 
                 try {
-                    $result = $this->smtp->sendMessage(
-                        $message,
-                        $host,
-                        $port,
-                        $user,
-                        $password,
-                        $authMethod,
-                        $authProtocol
-                    );
+                    $this->smtp->sendMessage($message, $host, $port, $user, $password, $authMethod, $authProtocol);
                     $error = null;
                 } catch (Exception $e) {
                     $error = $e->getMessage();
                 }
 
-                if ($this->scopeConfig->isSetFlag('system/smtp/debug', ScopeInterface::SCOPE_STORE, $store)) {
+                if ($this->getConfig('system/smtp/debug')) {
                     $this->logger->log(
-                        sprintf(
-                            "SMTP mail sent\n" .
-                            "host: %s\nport: %s\nauth method: %s\nauth protocol: %s\nuser: %s\npassword: %s\n" .
-                            "subject: %s\nerror: %s",
-                            $host,
-                            $port,
-                            $authMethod,
-                            $authProtocol,
-                            $user,
-                            $password,
-                            $message->getSubject(),
-                            $error
-                        ),
+                        "SMTP mail sent\n" .
+                        "host: $host\nport: $port\nauth method: $authMethod\nauth protocol: $authProtocol\n" .
+                        "user: $user\npassword: $password\n" .
+                        'subject: ' . $message->getSubject() . "\nerror: $error",
                         'email/' . date('Y') . '/' . date('m') . '/' . date('Y-m-d') . '.log'
                     );
                 }
-
-                return $result;
+                return;
 
             default:
-                return $proceed();
+                $proceed();
         }
     }
 }
