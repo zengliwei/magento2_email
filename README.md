@@ -39,7 +39,7 @@ of `\Magento\Framework\Mail\Template\TransportBuilder`, here is an example:
 /** @var string $fromMail */
 /** @var string $fromName */
 /** @var string $toMail */
-/** @var string $filepath */
+/** @var string $filepath  Absolute file path of the attachment */
 $transportBuilder
     ->setTemplateIdentifier($templateId)
     ->setTemplateVars($variables)
