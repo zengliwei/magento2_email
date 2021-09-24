@@ -6,7 +6,7 @@
 
 namespace CrazyCat\Email\Model\Config\Source;
 
-use CrazyCat\Email\Model\Transport\Method;
+use CrazyCat\Email\Model\Transport;
 use Magento\Framework\Data\OptionSourceInterface;
 
 /**
@@ -15,16 +15,14 @@ use Magento\Framework\Data\OptionSourceInterface;
  */
 class TransportMethods implements OptionSourceInterface
 {
-    public const DEFAULT_METHOD = 'default';
-
     /**
      * @inheritDoc
      */
     public function toOptionArray()
     {
         return [
-            ['label' => __('Default'), 'value' => self::DEFAULT_METHOD],
-            ['label' => __('SMTP'), 'value' => Method\Smtp::METHOD]
+            ['label' => __('Default'), 'value' => Transport\Sendmail::METHOD],
+            ['label' => __('SMTP'), 'value' => Transport\Smtp::METHOD]
         ];
     }
 }

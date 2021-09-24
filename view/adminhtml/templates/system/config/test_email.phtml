@@ -4,11 +4,11 @@
  * Each source file in this distribution is licensed under OSL 3.0, see LICENSE for details.
  */
 
-use CrazyCat\Email\Block\Adminhtml\System\Config\TestConnection;
+use CrazyCat\Email\Block\Adminhtml\System\Config\TestEmail;
 
-/** @var $block TestConnection */
+/** @var $block TestEmail */
 ?>
-<div data-mage-init='{"CrazyCat_Email/js/test-email": {
+<div data-mage-init='{"CrazyCat_Email/js/<?= $block->getDataByKey('js_path') /* @noEscape */ ?>": {
         "url": "<?= $block->escapeUrl($block->getDataByKey('ajax_url')) ?>",
         "button_label": "<?= $block->escapeJs(__('Test Email')) ?>",
         "sending_label": "<?= $block->escapeJs(__('Sending...')) ?>"

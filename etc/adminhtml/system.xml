@@ -71,6 +71,7 @@
                 <field id="test_connect" translate="button_label" sortOrder="40"
                        showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>CrazyCat\Email\Block\Adminhtml\System\Config\TestEmail</frontend_model>
+                    <button_url>email/test/smtp</button_url>
                     <depends>
                         <field id="transport_method">smtp</field>
                     </depends>

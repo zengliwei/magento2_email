@@ -25,7 +25,13 @@ class TestEmail extends Field
      */
     protected function _getElementHtml(AbstractElement $element)
     {
-        $this->addData(['html_id' => $element->getHtmlId(), 'ajax_url' => $this->_urlBuilder->getUrl('email/test')]);
+        $this->addData(
+            [
+                'html_id' => $element->getHtmlId(),
+                'ajax_url' => $this->_urlBuilder->getUrl($element->getData('original_data/button_url')),
+                'js_path' => $element->getData('original_data/button_url')
+            ]
+        );
         return $this->_toHtml();
     }
 }

@@ -6,32 +6,28 @@
 
 namespace CrazyCat\Email\Controller\Adminhtml\Test;
 
-use CrazyCat\Email\Model\Transport\Method\Smtp;
+use CrazyCat\Email\Model\TransportBuilder;
 use Exception;
+use Laminas\Mail\Transport\Smtp as Transport;
+use Laminas\Mail\Transport\SmtpOptions;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\Area;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Mail\Template\TransportBuilder;
 use Magento\Store\Model\Store;
 
 /**
  * @author  Zengliwei <zengliwei@163.com>
  * @url https://github.com/zengliwei/magento2_email
  */
-class Index extends Action implements HttpPostActionInterface
+class Smtp extends Action implements HttpPostActionInterface
 {
     /**
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
-
-    /**
-     * @var Smtp
-     */
-    private $smtp;
 
     /**
      * @var TransportBuilder
@@ -40,18 +36,15 @@ class Index extends Action implements HttpPostActionInterface
 
     /**
      * @param ScopeConfigInterface $scopeConfig
-     * @param Smtp                 $smtpMethod
      * @param TransportBuilder     $transportBuilder
      * @param Context              $context
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        Smtp $smtpMethod,
         TransportBuilder $transportBuilder,
         Context $context
     ) {
         $this->scopeConfig = $scopeConfig;
-        $this->smtp = $smtpMethod;
         $this->transportBuilder = $transportBuilder;
         parent::__construct($context);
     }
@@ -77,16 +70,29 @@ class Index extends Action implements HttpPostActionInterface
             $authProtocol = $this->getRequest()->getParam('auth_protocol')
                 ?: $this->scopeConfig->getValue('system/smtp/auth_protocol');
 
-            $emailMessage = $this->transportBuilder
+            $mailMessage = $this->transportBuilder
                 ->setTemplateIdentifier('email_test_template')
                 ->setTemplateVars([])
                 ->setTemplateOptions(['area' => Area::AREA_ADMINHTML, 'store' => Store::DEFAULT_STORE_ID])
                 ->setFromByScope(['email' => $mail, 'name' => 'Email Tester'])
                 ->addTo($mail)
                 ->getTransport()
-                ->getMessage();
+                ->prepareMailMessage();
 
-            $this->smtp->sendMessage($emailMessage, $host, $port, $user, $password, $authMethod, $authProtocol);
+            (new Transport(
+                new SmtpOptions(
+                    [
+                        'host'              => $host,
+                        'port'              => $port,
+                        'connection_class'  => $authMethod,
+                        'connection_config' => [
+                            'username' => $user,
+                            'password' => $password,
+                            'ssl'      => $authProtocol
+                        ]
+                    ]
+                )
+            ))->send($mailMessage);
         } catch (Exception $e) {
             $success = false;
             $message = $e->getMessage();

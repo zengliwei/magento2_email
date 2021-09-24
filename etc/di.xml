@@ -7,15 +7,11 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
     <!-- Register the `store` option in order to get correct store configruation -->
-    <type name="Magento\Framework\Mail\Template\TransportBuilder">
-        <plugin name="email_transport_builder"
-                type="CrazyCat\Email\Plugin\EmailTransportBuilder"/>
-    </type>
+    <preference for="Magento\Framework\Mail\Template\TransportBuilder"
+                type="CrazyCat\Email\Model\TransportBuilder"/>
 
     <!-- Rebuild Email transport method, use SMTP or other 3rd party method instead -->
-    <type name="Magento\Framework\Mail\TransportInterface">
-        <plugin name="email_transport"
-                type="CrazyCat\Email\Plugin\EmailTransport"/>
-    </type>
+    <preference for="Magento\Framework\Mail\TransportInterface"
+                type="CrazyCat\Email\Model\Transport"/>
 
 </config>
