@@ -76,9 +76,11 @@ class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
     public function getTransport()
     {
         /** @var Transport $transport */
+        $attachments = $this->attachments;
+        $store = $this->store;
         $transport = parent::getTransport();
-        $transport->addAttachments($this->attachments);
-        $transport->setStore($this->store);
+        $transport->addAttachments($attachments);
+        $transport->setStore($store);
         return $transport;
     }
 }

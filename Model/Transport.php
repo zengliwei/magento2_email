@@ -7,8 +7,9 @@
 namespace CrazyCat\Email\Model;
 
 use Laminas\Mail\Message;
+use Laminas\Mime\Message as MimeMessage;
 use Laminas\Mime\Mime;
-use Laminas\Mime\Part;
+use Laminas\Mime\Part as MimePart;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem\DriverInterface;
@@ -147,6 +148,16 @@ class Transport implements TransportInterface
     {
         $message = Message::fromString($this->message->toString());
         $mimeMessage = $message->getBody();
+        if (is_string($mimeMessage)) {
+            $mimeMessage = new MimeMessage();
+            foreach ($this->message->getMessageBody()->getParts() as $part) {
+                $mimePart = new MimePart($part->getRawContent());
+                $mimePart->setType($part->getType())
+                    ->setCharset($part->getCharset())
+                    ->setEncoding($part->getEncoding());
+                $mimeMessage->addPart($mimePart);
+            }
+        }
 
         $hasAttachment = false;
         foreach ($this->attachments as $attachment) {
@@ -158,13 +169,15 @@ class Transport implements TransportInterface
             $fileInfo = finfo_open(FILEINFO_MIME);
             $mime = finfo_file($fileInfo, $attachment);
             finfo_close($fileInfo);
-            $mimePart = new Part($this->filesystemDriver->fileOpen($attachment, 'r'));
+            $mimePart = new MimePart($this->filesystemDriver->fileOpen($attachment, 'r'));
             $mimePart->setType($mime)
                 ->setFileName($pathInfo['basename'])
                 ->setDisposition(Mime::DISPOSITION_ATTACHMENT)
                 ->setEncoding(Mime::ENCODING_BASE64);
-            $mimeMessage->addPart($attachment);
+            $mimeMessage->addPart($mimePart);
         }
+
+        $message->setBody($mimeMessage);
 
         if ($hasAttachment) {
             $contentTypeHeader = $message->getHeaders()->get('Content-Type');
