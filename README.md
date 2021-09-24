@@ -1,6 +1,7 @@
 # SMTP module for Magento 2
 
-Use SMTP to send emails.
+- Add SMTP method for sending emails.
+- Rebuild transport builder and transport model and make it easier to add attachment
 
 ## Installation
 
@@ -17,7 +18,36 @@ Use SMTP to send emails.
 
 ## How to use
 
+### Sending email by SMTP
+
 1. Go to `STORES / Settings / Configuration > ADVANCED / System > Mail Sending Settings` of admin panel.
 2. Switch the `Email Transport Method` to `SMTP`.
-3. Fill in the `Host`, `Port`, `SMTP User`, `SMTP Password` and click the Save Config button.
-4. Fill in an email address into the input box above the Test Email button, clich the button to check whether it works
+3. Config in the settings `Host`, `Port`, `SMTP User`, `SMTP Password`, etc.
+4. Fill in an email address into the input box above Test Email button, then click the button and check email box
+5. If a test mail is received, then everything goes fine. Click the Save Config button to make it work for Magento
+   functions
+
+### Sending email with attachment
+
+Use `addAttachment` or `addAttachments` method to add attachment(s) before executing `getTransport`
+of `\Magento\Framework\Mail\Template\TransportBuilder`, here is an example:
+
+```php
+/** @var \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder */
+/** @var string $templateId */
+/** @var array $variables */
+/** @var string $fromMail */
+/** @var string $fromName */
+/** @var string $toMail */
+/** @var string $filepath */
+$transportBuilder
+    ->setTemplateIdentifier($templateId)
+    ->setTemplateVars($variables)
+    ->setTemplateOptions(['area' => Area::AREA_ADMINHTML, 'store' => Store::DEFAULT_STORE_ID])
+    ->setFromByScope(['email' => $fromMail, 'name' => $fromName])
+    ->addTo($toMail)
+    ->addAttachment($filepathA)
+    ->addAttachments([$filepathB, $filepathC])
+    ->getTransport()
+    ->sendMessage();
+```
