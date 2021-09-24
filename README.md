@@ -1,7 +1,7 @@
 # SMTP module for Magento 2
 
 - Add SMTP method for sending emails.
-- Rebuild transport builder and transport model and make it easier to add attachment
+- Rebuild transport builder and transport model, make it easier to add attachment
 
 ## Installation
 
